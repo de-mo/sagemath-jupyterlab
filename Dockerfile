@@ -1,4 +1,4 @@
-FROM sagemath/sagemath:9.0
+FROM sagemath/sagemath:9.1
 
 EXPOSE 8888
 
