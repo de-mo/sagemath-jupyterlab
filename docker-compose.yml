@@ -1,0 +1,14 @@
+version: '3'
+services:
+    sagemathlab:
+        restart: always
+        image: denmor/sagemath-jupyterlab:latest
+        container_name: sagemathlab
+        environment:
+            - LOCAL_UID=1000
+            - LOCAL_GID=1000
+        ports:
+            - 8888:8888
+        volumes:
+            - /var/sagemath/data:/home/sage/host
+            - /var/sagemath/config:/home/sage/config
