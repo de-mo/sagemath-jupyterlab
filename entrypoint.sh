@@ -25,13 +25,18 @@ groupmod -o -g $LGID $GROUPNAME #>/dev/null 2>&1
 useradd -o -m -u $LUID -g $GROUPNAME -s /bin/false $USERNAME #>/dev/null 2>&1 ||
 usermod -o -u $LUID -g $GROUPNAME -s /bin/false $USERNAME #>/dev/null 2>&1
 
-# Add sage user to group $GROUPNAME
-usermod -a -G $GROUPNAME sage
+# Add user $USERNAME to group sage
+usermod -a -G sage $GROUPNAME
 
-# Copy default config, if not exist
+# Change owner of directories host, config and install
+chown -R $USERNAME:$GROUPNAME /home/sage/host
+chown -R $USERNAME:$GROUPNAME /home/sage/config
+chown -R $USERNAME:$GROUPNAME /home/sage/install
+
+# Copy default config, if not exist (with user $USERNAME)
 if [ ! -f $CONFIG_FILE ]; then
-    sudo -u sage cp /home/sage/install/jupyter_notebook_config.py $CONFIG_FILE
+    sudo -u $USERNAME cp /home/sage/install/jupyter_notebook_config.py $CONFIG_FILE
 fi
 
-# Start exec with user sage
-exec gosu  sage:sage "$@"
+# Start exec with user $USERNAME:$GROUPNAME
+exec gosu $USERNAME:$GROUPNAME "$@"
